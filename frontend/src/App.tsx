@@ -90,14 +90,22 @@ export default function App({ mode, onToggleTheme }: Props): JSX.Element {
       })}
     >
       <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ mb: 2 }}>
-        <Box>
-          <Typography color="primary" variant="h4" gutterBottom>
-            SaaS TESA Dashboard
-          </Typography>
-          <Typography variant="body1" color="text.secondary">
-            Threat Environment Situational Awareness for SaaS engineering organizations.
-          </Typography>
-        </Box>
+        <Stack direction="row" spacing={1.5} alignItems="center">
+          <Box
+            component="img"
+            src="/mascot.svg"
+            alt="SaaS TESA mascot"
+            sx={{ width: 44, height: 44, borderRadius: 1.5, boxShadow: 2 }}
+          />
+          <Box>
+            <Typography color="primary" variant="h4" gutterBottom>
+              SaaS TESA Dashboard
+            </Typography>
+            <Typography variant="body1" color="text.secondary">
+              Threat Environment Situational Awareness for SaaS engineering organizations.
+            </Typography>
+          </Box>
+        </Stack>
         <IconButton color="primary" onClick={onToggleTheme} aria-label="toggle color mode">
           {mode === "light" ? <DarkMode /> : <LightMode />}
         </IconButton>
