@@ -158,6 +158,12 @@ Recommended branch policy:
 - Seed data using `saastesa seed-demo` command.
 - Confirm seed command targets deployed URL, not localhost.
 
+### Issue: `tsc: command not found` in Vercel build logs
+
+- Ensure deployment is using repo `vercel.json` at root.
+- This repo config sets `installCommand` to `cd frontend && npm install --include=dev` so TypeScript is installed for build.
+- Trigger a fresh redeploy after pulling the latest main branch.
+
 ## 10) Recommended next hardening steps
 
 - Add auth (OIDC/JWT)
