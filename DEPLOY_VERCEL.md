@@ -169,6 +169,12 @@ Recommended branch policy:
 - This repo config sets `installCommand` to `cd frontend && npm install --include=dev` so TypeScript is installed for build.
 - Trigger a fresh redeploy after pulling the latest main branch.
 
+### Issue: `uv is required but was not found in PATH`
+
+- Vercel Python builds require `uv` in the build environment.
+- This repo's GitHub Actions workflow installs `uv` via `astral-sh/setup-uv@v5` before `vercel build`.
+- If you use a custom CI pipeline, install `uv` before running `vercel build`.
+
 ## 10) Recommended next hardening steps
 
 - Add auth (OIDC/JWT)

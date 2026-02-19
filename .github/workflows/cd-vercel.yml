@@ -32,6 +32,9 @@ jobs:
         with:
           node-version: "20"
 
+      - name: Setup uv
+        uses: astral-sh/setup-uv@v5
+
       - name: Install Vercel CLI
         run: npm install --global vercel@latest
 
@@ -67,6 +70,9 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: "20"
+
+      - name: Setup uv
+        uses: astral-sh/setup-uv@v5
 
       - name: Install Vercel CLI
         run: npm install --global vercel@latest
