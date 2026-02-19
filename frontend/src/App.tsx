@@ -93,8 +93,8 @@ export default function App({ mode, onToggleTheme }: Props): JSX.Element {
         <Stack direction="row" spacing={1.5} alignItems="center">
           <Box
             component="img"
-            src="/mascot.svg"
-            alt="SaaS TESA mascot"
+            src="/favicon.svg"
+            alt="SaaS TESA icon"
             sx={{ width: 44, height: 44, borderRadius: 1.5, boxShadow: 2 }}
           />
           <Box>
