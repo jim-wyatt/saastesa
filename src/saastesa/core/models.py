@@ -1,6 +1,16 @@
 from dataclasses import dataclass
 from datetime import datetime
-from typing import Any
+
+from saastesa.core.contracts import (
+    FindingActivity,
+    FindingClass,
+    FindingDomain,
+    FindingSchemaVersion,
+    FindingSeverity,
+    FindingStandard,
+    FindingStatus,
+    JSONValue,
+)
 
 
 @dataclass(frozen=True)
@@ -9,7 +19,7 @@ class ThreatSignal:
     signal_type: str
     severity: int
     detected_at: datetime
-    metadata: dict[str, Any]
+    metadata: dict[str, JSONValue]
 
 
 @dataclass(frozen=True)
@@ -31,21 +41,21 @@ class FindingReferences:
 @dataclass(frozen=True)
 class SecurityFinding:
     finding_uid: str
-    standard: str
-    schema_version: str
-    status: str
+    standard: FindingStandard
+    schema_version: FindingSchemaVersion
+    status: FindingStatus
     severity_id: int
-    severity: str
+    severity: FindingSeverity
     risk_score: int
     title: str
     description: str
     category_name: str
-    class_name: str
+    class_name: FindingClass
     type_name: str
-    domain: str
-    activity_name: str
+    domain: FindingDomain
+    activity_name: FindingActivity
     time: datetime
     source: str
     resource: FindingResource
     references: FindingReferences
-    raw_data: dict[str, Any]
+    raw_data: dict[str, JSONValue]

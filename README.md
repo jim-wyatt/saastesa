@@ -19,6 +19,15 @@ SaaS TESA (Threat Environment Situational Awareness) is a platform scaffold for 
 - Non-local environments default to **PostgreSQL**
 - Override any environment with `TESA_DATABASE_URL`
 
+### Schema migration runbook
+
+- On API startup, SaaS TESA now runs an automatic schema check and migration step.
+- If the legacy denormalized `security_findings` schema is detected, startup migrates data in-place to the normalized model (`finding_resources`, `security_findings`, `finding_reference_items`).
+- Migration is idempotent: once upgraded, later starts skip the conversion and run normally.
+- Startup blocks until migration completes, so large datasets may increase cold-start time for the first upgraded boot.
+- Back up production data before first deploy with this version and validate migration in a staging environment first.
+- Postgres sequences are re-synced after migration; SQLite requires no sequence maintenance.
+
 ## Serverless deployment target (Vercel + Neon)
 
 This repo is now wired for:

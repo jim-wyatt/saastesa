@@ -1,6 +1,15 @@
 from collections.abc import Iterable
 from uuid import NAMESPACE_URL, uuid5
 
+from saastesa.core.contracts import (
+    CURRENT_FINDING_SCHEMA_VERSION,
+    FindingActivity,
+    FindingClass,
+    FindingDomain,
+    FindingSeverity,
+    FindingStandard,
+    FindingStatus,
+)
 from saastesa.core.models import FindingReferences, FindingResource, SecurityFinding, ThreatSignal
 
 
@@ -12,33 +21,45 @@ def compute_risk_score(signal: ThreatSignal) -> int:
     return min(raw_score, 10)
 
 
-def _severity_label(severity_id: int) -> str:
+def _severity_label(severity_id: int) -> FindingSeverity:
     mapping = {1: "informational", 2: "low", 3: "medium", 4: "high", 5: "critical"}
-    return mapping.get(severity_id, "unknown")
+    resolved = mapping.get(severity_id, FindingSeverity.INFORMATIONAL.value)
+    return FindingSeverity(resolved)
 
 
-def _domain(signal: ThreatSignal) -> str:
+def _domain(signal: ThreatSignal) -> FindingDomain:
     explicit_domain = str(signal.metadata.get("domain", "")).strip().lower()
     if explicit_domain:
-        return explicit_domain
+        try:
+            return FindingDomain(explicit_domain)
+        except ValueError:
+            return FindingDomain.OTHER
 
     source = signal.source.lower()
     if source in {"sast", "dast", "sca", "cicd", "code"}:
-        return "application"
+        return FindingDomain.APPLICATION
     if source in {"iam", "cloud", "cspm", "k8s", "host", "network"}:
-        return "infrastructure"
-    return "other"
+        return FindingDomain.INFRASTRUCTURE
+    return FindingDomain.OTHER
 
 
-def _category_name(domain: str) -> str:
+def _category_name(domain: FindingDomain) -> str:
     mapping = {
-        "application": "Application Security",
-        "infrastructure": "Infrastructure Security",
-        "identity": "Identity Security",
-        "cloud": "Cloud Security",
-        "container": "Container Security",
+        FindingDomain.APPLICATION: "Application Security",
+        FindingDomain.INFRASTRUCTURE: "Infrastructure Security",
+        FindingDomain.IDENTITY: "Identity Security",
+        FindingDomain.CLOUD: "Cloud Security",
+        FindingDomain.CONTAINER: "Container Security",
     }
     return mapping.get(domain, "Security Operations")
+
+
+def _status(value: object) -> FindingStatus:
+    candidate = str(value).strip().lower()
+    try:
+        return FindingStatus(candidate)
+    except ValueError:
+        return FindingStatus.OPEN
 
 
 def build_finding(signal: ThreatSignal) -> SecurityFinding:
@@ -64,9 +85,9 @@ def build_finding(signal: ThreatSignal) -> SecurityFinding:
 
     return SecurityFinding(
         finding_uid=finding_uid,
-        standard="OCSF",
-        schema_version="1.1.0",
-        status=str(signal.metadata.get("status", "open")),
+        standard=FindingStandard.OCSF,
+        schema_version=CURRENT_FINDING_SCHEMA_VERSION,
+        status=_status(signal.metadata.get("status", FindingStatus.OPEN.value)),
         severity_id=severity_id,
         severity=_severity_label(severity_id),
         risk_score=score_10 * 10,
@@ -77,10 +98,10 @@ def build_finding(signal: ThreatSignal) -> SecurityFinding:
             )
         ),
         category_name=_category_name(domain),
-        class_name="Security Finding",
+        class_name=FindingClass.SECURITY_FINDING,
         type_name=str(signal.metadata.get("type_name", signal.signal_type.replace("_", " ").title())),
         domain=domain,
-        activity_name="Create",
+        activity_name=FindingActivity.CREATE,
         time=signal.detected_at,
         source=signal.source,
         resource=resource,
