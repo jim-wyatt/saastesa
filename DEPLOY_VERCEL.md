@@ -110,6 +110,11 @@ Option B: post normalized findings directly to `/api/v1/findings` from your own 
 - `GET /api/v1/findings?limit=10` returns normalized OCSF-style records
 - Dark/light theme toggle works in the UI
 
+Automated smoke command:
+
+- `TESA_SMOKE_BASE_URL=https://your-app.vercel.app pytest -q tests/smoke`
+- `TESA_RUN_SMOKE=1 TESA_SMOKE_BASE_URL=https://your-app.vercel.app pytest -q tests/smoke`
+
 ## 8) Preview and production flow
 
 Recommended branch flow:

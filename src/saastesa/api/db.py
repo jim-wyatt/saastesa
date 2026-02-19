@@ -24,14 +24,26 @@ def resolve_database_url() -> str:
 
 
 def create_db_engine(database_url: str) -> Engine:
-    if database_url.startswith("sqlite"):
+    normalized_url = _normalize_database_url(database_url)
+
+    if normalized_url.startswith("sqlite"):
         connect_args = {"check_same_thread": False}
-        if database_url.endswith(":memory:"):
+        if normalized_url.endswith(":memory:"):
             return create_engine(
-                database_url,
+                normalized_url,
                 future=True,
                 connect_args=connect_args,
                 poolclass=StaticPool,
             )
-        return create_engine(database_url, future=True, connect_args=connect_args)
-    return create_engine(database_url, future=True)
+        return create_engine(normalized_url, future=True, connect_args=connect_args)
+    return create_engine(normalized_url, future=True)
+
+
+def _normalize_database_url(database_url: str) -> str:
+    if database_url.startswith("postgres://"):
+        return database_url.replace("postgres://", "postgresql+psycopg://", 1)
+    if database_url.startswith("postgresql://"):
+        return database_url.replace("postgresql://", "postgresql+psycopg://", 1)
+    if database_url.startswith("postgresql+psycopg2://"):
+        return database_url.replace("postgresql+psycopg2://", "postgresql+psycopg://", 1)
+    return database_url

@@ -136,6 +136,7 @@ npm run dev
 - `scripts/demo.sh` : one-command executive demo mode (live reload + seed + open dashboard)
 - `saastesa seed-demo --count 400 --days 45` : generate realistic cross-domain demo findings
 - `pytest` : run backend tests
+- `TESA_RUN_SMOKE=1 TESA_SMOKE_BASE_URL=https://saastesa.vercel.app pytest -q tests/smoke` : run deployment smoke tests
 
 ## Standardized findings model
 
