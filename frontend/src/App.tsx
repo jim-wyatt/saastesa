@@ -3,7 +3,6 @@ import { Alert, Box, CircularProgress, Container, Grid, IconButton, Stack, Typog
 import { alpha } from "@mui/material/styles";
 import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { Analytics } from "@vercel/analytics/react";
 
 import { API_BASE_URL, getFindings, getSummary } from "./api";
 import { DomainChart } from "./components/DomainChart";
@@ -132,7 +131,6 @@ export default function App({ mode, onToggleTheme }: Props) {
           <FindingsTable findings={findings} />
         </Grid>
       </Grid>
-      <Analytics />
     </Container>
   );
 }
