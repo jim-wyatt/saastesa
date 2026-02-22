@@ -163,3 +163,4 @@ Architecture UML diagrams (PlantUML): [docs/uml/README.md](docs/uml/README.md)
 - `src/saastesa/core/` threat domain models + scoring
 - `frontend/` React Vite dashboard
 - `tests/unit/` backend unit/API tests
+
